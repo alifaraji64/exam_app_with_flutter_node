@@ -1,6 +1,8 @@
+import 'package:examyy/core/view_models/create_exam_screen_view_model.dart';
 import 'package:examyy/meta/widgets/question.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class CreateExamScreen extends StatefulWidget {
   const CreateExamScreen({Key? key}) : super(key: key);
@@ -23,6 +25,14 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          print(Provider.of<CreateExamScreenViewModel>(context, listen: false)
+              .questions
+              .last
+              .correctAnswer);
+        },
+      ),
       appBar: AppBar(
         title: const Text('Create Exam'),
       ),
@@ -70,7 +80,10 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
                         ? int.parse(_questionNumberController.text)
                         : 0);
                 i++)
-              const Question()
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Question(),
+              )
           ]),
         ),
       )),

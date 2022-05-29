@@ -1,6 +1,7 @@
+import 'package:examyy/core/view_models/create_exam_screen_view_model.dart';
 import 'package:examyy/meta/screens/home_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
 import 'meta/screens/splash_screen.dart';
 
 void main() {
@@ -13,17 +14,22 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => CreateExamScreenViewModel())
+      ],
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        initialRoute: '/splash_screen',
+        routes: {
+          '/': (context) => const HomeScreen(),
+          '/splash_screen': (context) => const SplashScreen()
+        },
       ),
-      initialRoute: '/splash_screen',
-      routes: {
-        '/': (context) => const HomeScreen(),
-        '/splash_screen': (context) => const SplashScreen()
-      },
     );
   }
 }
