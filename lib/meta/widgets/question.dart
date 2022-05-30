@@ -16,9 +16,18 @@ class _QuestionState extends State<Question> {
   final TextEditingController _secondWrongAnswer = TextEditingController();
   final TextEditingController _thirdWrongAnswer = TextEditingController();
   final TextEditingController _correctAnswer = TextEditingController();
+  final TextEditingController _idController = TextEditingController();
   QuestionModel? _question;
+
   @override
   Widget build(BuildContext context) {
+    void _inputUpdated(String _) {
+      _question != null
+          ? Provider.of<CreateExamScreenViewModel>(context, listen: false)
+              .deleteQuestion(_question!)
+          : print('wohooo');
+    }
+
     return Container(
       padding: const EdgeInsets.all(12),
       width: MediaQuery.of(context).size.width * 0.9,
@@ -26,12 +35,18 @@ class _QuestionState extends State<Question> {
       child: Column(
         children: [
           const SizedBox(height: 10),
-          const Text('type your question',
-              style: TextStyle(
-                fontSize: 18,
-              )),
+          Row(
+            children: [
+              //TextFormField(controller: _idController),
+              const Text('type your question',
+                  style: TextStyle(
+                    fontSize: 18,
+                  )),
+            ],
+          ),
           TextFormField(
             controller: _questionController,
+            onChanged: _inputUpdated,
           ),
           const SizedBox(
             height: 20,
@@ -93,6 +108,7 @@ class _QuestionState extends State<Question> {
               color: Colors.green,
               onPressed: () {
                 _question = QuestionModel(
+                    question: _questionController.value.text,
                     wAnswerOne: _firstWrongAnswer.value.text,
                     wAnswerTwo: _secondWrongAnswer.value.text,
                     wAnswerThree: _thirdWrongAnswer.value.text,
@@ -101,27 +117,24 @@ class _QuestionState extends State<Question> {
                     .addToQuestions(_question!);
               },
               child:
+                  //check if any question is pushed into the array
                   Provider.of<CreateExamScreenViewModel>(context, listen: true)
                           .questions
                           .isNotEmpty
+                      //check if the pushed question exists in array=> show check mark
                       ? (Provider.of<CreateExamScreenViewModel>(context,
                                   listen: true)
                               .questions
                               .where((question) =>
-                                  question.correctAnswer ==
+                                  question.question ==
                                   (_question != null
-                                      ? _question!.correctAnswer
+                                      ? _question!.question
                                       : false))
                               .isNotEmpty
                           ? const Icon(Icons.check)
-                          : GestureDetector(
-                              child: const Text(
-                                'submit this question1',
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onTap: () {
-                                print(_question);
-                              },
+                          : const Text(
+                              'submit this question1',
+                              style: TextStyle(color: Colors.white),
                             ))
                       : const Text('submit this question'))
         ],

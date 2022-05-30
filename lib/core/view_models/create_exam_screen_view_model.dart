@@ -10,8 +10,15 @@ class CreateExamScreenViewModel extends ChangeNotifier {
   }
 
   bool querstionExistsInArray(QuestionModel _question) {
-    var res = questions
-        .where((question) => question.correctAnswer == _question.correctAnswer);
+    var res =
+        questions.where((question) => question.question == _question.question);
     return res.isNotEmpty;
+  }
+
+  deleteQuestion(QuestionModel _question) {
+    print(_question.correctAnswer);
+    questions
+        .removeWhere((question) => question.question == _question.question);
+    notifyListeners();
   }
 }

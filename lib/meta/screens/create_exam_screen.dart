@@ -27,10 +27,11 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          print(Provider.of<CreateExamScreenViewModel>(context, listen: false)
+          Provider.of<CreateExamScreenViewModel>(context, listen: false)
               .questions
-              .last
-              .correctAnswer);
+              .forEach((question) {
+            print(question.question);
+          });
         },
       ),
       appBar: AppBar(
