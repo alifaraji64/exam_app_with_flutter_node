@@ -1,9 +1,10 @@
 import 'package:examyy/core/models/question.dart';
-import 'package:examyy/meta/widgets/question.dart';
+import 'package:examyy/core/services/exam.dart';
 import 'package:flutter/cupertino.dart';
 
 class CreateExamScreenViewModel extends ChangeNotifier {
   List<QuestionModel> questions = [];
+  final Exam _exam = Exam();
   addToQuestions(QuestionModel _question) {
     questions.add(_question);
     notifyListeners();
@@ -20,5 +21,15 @@ class CreateExamScreenViewModel extends ChangeNotifier {
     questions
         .removeWhere((question) => question.question == _question.question);
     notifyListeners();
+  }
+
+  pickImage() async {
+    try {
+      String image = await _exam.pickImage();
+      return image;
+    } catch (e) {
+      print('error occured');
+      print(e);
+    }
   }
 }

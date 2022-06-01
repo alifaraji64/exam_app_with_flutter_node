@@ -18,6 +18,7 @@ class _QuestionState extends State<Question> {
   final TextEditingController _correctAnswer = TextEditingController();
   final TextEditingController _idController = TextEditingController();
   QuestionModel? _question;
+  String? image;
 
   @override
   Widget build(BuildContext context) {
@@ -25,23 +26,70 @@ class _QuestionState extends State<Question> {
       _question != null
           ? Provider.of<CreateExamScreenViewModel>(context, listen: false)
               .deleteQuestion(_question!)
+          // ignore: avoid_print
           : print('wohooo');
     }
 
     return Container(
-      padding: const EdgeInsets.all(12),
+      padding: const EdgeInsets.all(4),
       width: MediaQuery.of(context).size.width * 0.9,
       color: Colors.green[100],
       child: Column(
         children: [
-          const SizedBox(height: 10),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //TextFormField(controller: _idController),
-              const Text('type your question',
-                  style: TextStyle(
-                    fontSize: 18,
-                  )),
+              Flexible(
+                child: TextFormField(
+                  controller: _idController,
+                  decoration: const InputDecoration(
+                    enabledBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1,
+                      ),
+                      gapPadding: 4,
+                    ),
+                    helperText: 'order no.',
+                  ),
+                ),
+                //flex: 1,
+              ),
+              SizedBox(width: MediaQuery.of(context).size.width * 0.55),
+              Flexible(
+                flex: 1,
+                child: MaterialButton(
+                    onPressed: () async {
+                      try {
+                        //print('xxxxxx' + image!);
+                        image = await Provider.of<CreateExamScreenViewModel>(
+                                context,
+                                listen: false)
+                            .pickImage();
+                        print('wowooo');
+                        print(image);
+                      } catch (e) {
+                        print(e);
+                      }
+                    },
+                    child: const Icon(
+                      Icons.image,
+                      color: Colors.green,
+                    )),
+              )
+            ],
+          ),
+          const SizedBox(height: 5),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: const [
+              Flexible(
+                child: Text('type your question',
+                    style: TextStyle(
+                      fontSize: 20,
+                    )),
+                flex: 4,
+              ),
             ],
           ),
           TextFormField(
