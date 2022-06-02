@@ -1,6 +1,7 @@
 import 'package:examyy/core/models/question.dart';
 import 'package:examyy/core/view_models/create_exam_screen_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 class Question extends StatefulWidget {
@@ -16,13 +17,15 @@ class _QuestionState extends State<Question> {
   final TextEditingController _secondWrongAnswer = TextEditingController();
   final TextEditingController _thirdWrongAnswer = TextEditingController();
   final TextEditingController _correctAnswer = TextEditingController();
-  final TextEditingController _idController = TextEditingController();
+  final TextEditingController _orderController = TextEditingController();
   QuestionModel? _question;
-  String? image;
+  String? url;
+  bool? isUploadingImage = false;
+  bool? imageUploaded = false;
 
   @override
   Widget build(BuildContext context) {
-    void _inputUpdated(String _) {
+    void _inputUpdated(String? _) {
       _question != null
           ? Provider.of<CreateExamScreenViewModel>(context, listen: false)
               .deleteQuestion(_question!)
@@ -42,7 +45,9 @@ class _QuestionState extends State<Question> {
             children: [
               Flexible(
                 child: TextFormField(
-                  controller: _idController,
+                  controller: _orderController,
+                  onChanged: _inputUpdated,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(
                       borderSide: BorderSide(
@@ -59,23 +64,42 @@ class _QuestionState extends State<Question> {
               Flexible(
                 flex: 1,
                 child: MaterialButton(
-                    onPressed: () async {
-                      try {
-                        //print('xxxxxx' + image!);
-                        image = await Provider.of<CreateExamScreenViewModel>(
-                                context,
-                                listen: false)
-                            .pickImage();
-                        print('wowooo');
-                        print(image);
-                      } catch (e) {
-                        print(e);
-                      }
-                    },
-                    child: const Icon(
-                      Icons.image,
-                      color: Colors.green,
-                    )),
+                  onPressed: () async {
+                    if (url != null) {
+                      _inputUpdated(null);
+                    }
+                    setState(() {
+                      isUploadingImage = true;
+                    });
+                    try {
+                      url = await Provider.of<CreateExamScreenViewModel>(
+                              context,
+                              listen: false)
+                          .pickImage(context);
+                      setState(() {
+                        imageUploaded = true;
+                      });
+                      print(url!);
+                      // ignore: empty_catches
+                    } catch (e) {
+                    } finally {
+                      setState(() {
+                        isUploadingImage = false;
+                      });
+                    }
+                  },
+                  child: isUploadingImage == false
+                      ? (imageUploaded == false
+                          ? const Icon(
+                              Icons.image,
+                              color: Colors.green,
+                            )
+                          : const Icon(
+                              Icons.check,
+                              color: Colors.green,
+                            ))
+                      : const CircularProgressIndicator(),
+                ),
               )
             ],
           ),
@@ -104,6 +128,7 @@ class _QuestionState extends State<Question> {
               TableRow(children: [
                 TextField(
                   controller: _firstWrongAnswer,
+                  onChanged: _inputUpdated,
                   decoration: const InputDecoration(
                       helperText: '1.wrong answer',
                       prefixIcon: Icon(
@@ -116,6 +141,7 @@ class _QuestionState extends State<Question> {
                 ),
                 TextFormField(
                   controller: _secondWrongAnswer,
+                  onChanged: _inputUpdated,
                   decoration: const InputDecoration(
                       helperText: '2.wrong answer',
                       prefixIcon: Icon(
@@ -127,6 +153,7 @@ class _QuestionState extends State<Question> {
               TableRow(children: [
                 TextField(
                   controller: _thirdWrongAnswer,
+                  onChanged: _inputUpdated,
                   decoration: const InputDecoration(
                       helperText: '3.wrong answer',
                       prefixIcon: Icon(
@@ -139,6 +166,7 @@ class _QuestionState extends State<Question> {
                 ),
                 TextFormField(
                   controller: _correctAnswer,
+                  onChanged: _inputUpdated,
                   decoration: InputDecoration(
                       helperText: 'correct answer',
                       prefixIcon: Icon(
@@ -156,13 +184,16 @@ class _QuestionState extends State<Question> {
               color: Colors.green,
               onPressed: () {
                 _question = QuestionModel(
-                    question: _questionController.value.text,
-                    wAnswerOne: _firstWrongAnswer.value.text,
-                    wAnswerTwo: _secondWrongAnswer.value.text,
-                    wAnswerThree: _thirdWrongAnswer.value.text,
-                    correctAnswer: _correctAnswer.value.text);
+                  question: _questionController.value.text,
+                  wAnswerOne: _firstWrongAnswer.value.text,
+                  wAnswerTwo: _secondWrongAnswer.value.text,
+                  wAnswerThree: _thirdWrongAnswer.value.text,
+                  correctAnswer: _correctAnswer.value.text,
+                  url: url,
+                  order: int.parse(_orderController.value.text),
+                );
                 Provider.of<CreateExamScreenViewModel>(context, listen: false)
-                    .addToQuestions(_question!);
+                    .addToQuestions(context, _question!);
               },
               child:
                   //check if any question is pushed into the array
