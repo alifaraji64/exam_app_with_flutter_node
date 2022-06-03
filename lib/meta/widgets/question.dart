@@ -65,9 +65,8 @@ class _QuestionState extends State<Question> {
                 flex: 1,
                 child: MaterialButton(
                   onPressed: () async {
-                    if (url != null) {
-                      _inputUpdated(null);
-                    }
+                    _inputUpdated(null);
+
                     setState(() {
                       isUploadingImage = true;
                     });
@@ -180,8 +179,43 @@ class _QuestionState extends State<Question> {
           const SizedBox(
             height: 20,
           ),
-          MaterialButton(
+          if (Provider.of<CreateExamScreenViewModel>(context, listen: true)
+              .questions
+              .isNotEmpty)
+            Provider.of<CreateExamScreenViewModel>(context, listen: true)
+                    .questions
+                    .where((question) =>
+                        question.question ==
+                        (_question != null ? _question!.question : false))
+                    .isNotEmpty
+                ? MaterialButton(
+                    color: Colors.green,
+                    child: const Icon(Icons.check),
+                    onPressed: () {},
+                  )
+                : MaterialButton(
+                    color: Colors.green,
+                    child: const Text('submit this question'),
+                    onPressed: () {
+                      _question = QuestionModel(
+                        question: _questionController.value.text,
+                        wAnswerOne: _firstWrongAnswer.value.text,
+                        wAnswerTwo: _secondWrongAnswer.value.text,
+                        wAnswerThree: _thirdWrongAnswer.value.text,
+                        correctAnswer: _correctAnswer.value.text,
+                        url: url,
+                        order: _orderController.value.text != ''
+                            ? int.parse(_orderController.value.text)
+                            : 0,
+                      );
+                      Provider.of<CreateExamScreenViewModel>(context,
+                              listen: false)
+                          .addToQuestions(context, _question!);
+                    })
+          else
+            MaterialButton(
               color: Colors.green,
+              child: const Text('submit this question'),
               onPressed: () {
                 _question = QuestionModel(
                   question: _questionController.value.text,
@@ -190,32 +224,14 @@ class _QuestionState extends State<Question> {
                   wAnswerThree: _thirdWrongAnswer.value.text,
                   correctAnswer: _correctAnswer.value.text,
                   url: url,
-                  order: int.parse(_orderController.value.text),
+                  order: _orderController.value.text != ''
+                      ? int.parse(_orderController.value.text)
+                      : 0,
                 );
                 Provider.of<CreateExamScreenViewModel>(context, listen: false)
                     .addToQuestions(context, _question!);
               },
-              child:
-                  //check if any question is pushed into the array
-                  Provider.of<CreateExamScreenViewModel>(context, listen: true)
-                          .questions
-                          .isNotEmpty
-                      //check if the pushed question exists in array=> show check mark
-                      ? (Provider.of<CreateExamScreenViewModel>(context,
-                                  listen: true)
-                              .questions
-                              .where((question) =>
-                                  question.question ==
-                                  (_question != null
-                                      ? _question!.question
-                                      : false))
-                              .isNotEmpty
-                          ? const Icon(Icons.check)
-                          : const Text(
-                              'submit this question1',
-                              style: TextStyle(color: Colors.white),
-                            ))
-                      : const Text('submit this question'))
+            )
         ],
       ),
     );

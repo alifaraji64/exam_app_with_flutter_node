@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:examyy/core/models/question.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 class Exam {
+  static const baseUrl = 'http://10.0.2.2:8000';
   static String token = '';
   Future pickImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -32,14 +32,28 @@ class Exam {
     try {
       var res = await request.send();
       var responsed = await http.Response.fromStream(res);
+      print(responsed.body);
       return ('https://ipfs.io/ipfs/' + jsonDecode(responsed.body)['cid']);
     } catch (e) {
+      print('error while uploading image');
       print(e);
     }
+  }
+
+  Future postExam(List<QuestionModel> _questions) async {
+    final client = http.Client();
+    Uri uri = Uri.parse(baseUrl + '/add-exam');
+    http.Response response = await client.post(uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'questions': _questions}));
+    if (response.statusCode != 200) {
+      return throw CustomException(msg: jsonDecode(response.body)['error']);
+    }
+    client.close();
   }
 }
 
 class CustomException implements Exception {
-  String? msg;
-  CustomException({this.msg});
+  String msg;
+  CustomException({required this.msg});
 }

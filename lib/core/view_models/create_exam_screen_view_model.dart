@@ -6,13 +6,12 @@ class CreateExamScreenViewModel extends ChangeNotifier {
   List<QuestionModel> questions = [];
   final Exam _exam = Exam();
   addToQuestions(BuildContext context, QuestionModel _question) {
-    if (_question.correctAnswer!.isEmpty ||
-        _question.question!.isEmpty ||
-        _question.wAnswerOne!.isEmpty ||
-        _question.wAnswerTwo!.isEmpty ||
-        _question.wAnswerThree!.isEmpty ||
-        _question.order!.bitLength <= 0) {
-      print('1');
+    if (_question.correctAnswer.isEmpty ||
+        _question.question.isEmpty ||
+        _question.wAnswerOne.isEmpty ||
+        _question.wAnswerTwo.isEmpty ||
+        _question.wAnswerThree.isEmpty ||
+        _question.order.bitLength <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
           'please fill all the fields. only image is optional',
@@ -22,8 +21,8 @@ class CreateExamScreenViewModel extends ChangeNotifier {
       ));
       return;
     }
-    print('2');
-    print(_question.correctAnswer);
+    //close keyboard
+    FocusManager.instance.primaryFocus!.unfocus();
     questions.add(_question);
     notifyListeners();
   }
@@ -68,7 +67,34 @@ class CreateExamScreenViewModel extends ChangeNotifier {
 
   uploadImage(BuildContext context, String _image) async {
     try {
-      return await _exam.uploadImage(_image);
+      String url = await _exam.uploadImage(_image);
+      print(url);
+      return url;
+    } catch (e) {
+      print(e);
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: const Text(
+          'an unknown error occured',
+          style: TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.red[600],
+      ));
+    }
+  }
+
+  addExam(BuildContext context) async {
+    //change the order of questions based on the user selected order number
+    questions.sort((a, b) => a.order.compareTo(b.order));
+    try {
+      await _exam.postExam(questions);
+    } on CustomException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          e.msg,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        backgroundColor: Colors.red[600],
+      ));
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(

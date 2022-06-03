@@ -1,6 +1,7 @@
 class QuestionModel {
-  String? question, wAnswerOne, wAnswerTwo, wAnswerThree, correctAnswer, url;
-  int? order;
+  String? url;
+  String question, wAnswerOne, wAnswerTwo, wAnswerThree, correctAnswer;
+  int order;
   QuestionModel({
     required this.url,
     required this.question,
@@ -20,15 +21,15 @@ class QuestionModel {
       url: json['url'],
       order: json['order']);
 
-  Map<String, String> toJson() {
+  Map<String, String?> toJson() {
     return {
-      'question': question!,
-      'wAnswerOne': wAnswerOne!,
-      'wAnswerTwo': wAnswerTwo!,
-      'wAnswerThree': wAnswerThree!,
-      'correctAnswer': correctAnswer!,
-      'url': url!,
-      'order': order!.toString()
+      'question': question,
+      'wAnswerOne': wAnswerOne,
+      'wAnswerTwo': wAnswerTwo,
+      'wAnswerThree': wAnswerThree,
+      'correctAnswer': correctAnswer,
+      'url': url,
+      'order': order.toString()
     };
   }
 }

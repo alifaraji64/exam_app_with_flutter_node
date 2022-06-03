@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:examyy/core/models/question.dart';
 import 'package:examyy/core/view_models/create_exam_screen_view_model.dart';
 import 'package:examyy/meta/widgets/question.dart';
 import 'package:flutter/material.dart';
@@ -26,13 +29,19 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Provider.of<CreateExamScreenViewModel>(context, listen: false)
-              .questions
-              .forEach((question) {
-            print(question.question);
-          });
+        onPressed: () async {
+          List<QuestionModel> questions =
+              Provider.of<CreateExamScreenViewModel>(context, listen: false)
+                  .questions;
+          // Provider.of<CreateExamScreenViewModel>(context, listen: false)
+          //     .questions
+          //     .forEach((question) {
+          //   print(question.toJson());
+          // });
+          await Provider.of<CreateExamScreenViewModel>(context, listen: false)
+              .addExam(context);
         },
+        child: const Icon(Icons.upload),
       ),
       appBar: AppBar(
         title: const Text('Create Exam'),
