@@ -1,7 +1,9 @@
 import 'package:custom_navigation_bar/custom_navigation_bar.dart';
+import 'package:examyy/core/view_models/take_exam_screen_view_model.dart';
 import 'package:examyy/meta/screens/create_exam_screen.dart';
 import 'package:examyy/meta/screens/take_exam_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -11,7 +13,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  int _bottomNavIndex = 1;
+  int _bottomNavIndex = 0;
   final iconList = <IconData>[Icons.create, Icons.check_box];
   final PageController homepageController = PageController();
   @override

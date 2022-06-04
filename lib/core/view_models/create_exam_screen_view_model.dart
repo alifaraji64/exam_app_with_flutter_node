@@ -1,3 +1,4 @@
+import 'package:examyy/core/models/exam.dart';
 import 'package:examyy/core/models/question.dart';
 import 'package:examyy/core/services/exam.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class CreateExamScreenViewModel extends ChangeNotifier {
     } on CustomException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          e.msg!.toString(),
+          e.msg.toString(),
           style: const TextStyle(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.red[600],
@@ -82,11 +83,14 @@ class CreateExamScreenViewModel extends ChangeNotifier {
     }
   }
 
-  addExam(BuildContext context) async {
+  addExam(BuildContext context, ExamModel _examInstance) async {
     //change the order of questions based on the user selected order number
     questions.sort((a, b) => a.order.compareTo(b.order));
     try {
-      await _exam.postExam(questions);
+      await _exam.postExam(questions, _examInstance);
+      Navigator.of(context).pop();
+      questions.clear();
+      notifyListeners();
     } on CustomException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
@@ -96,9 +100,10 @@ class CreateExamScreenViewModel extends ChangeNotifier {
         backgroundColor: Colors.red[600],
       ));
     } catch (e) {
+      print(e);
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: const Text(
-          'an unknown error occured',
+          'an unknown error occuredd',
           style: TextStyle(fontWeight: FontWeight.w600),
         ),
         backgroundColor: Colors.red[600],

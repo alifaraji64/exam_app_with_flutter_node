@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:examyy/core/models/exam.dart';
 import 'package:examyy/core/models/question.dart';
 import 'package:examyy/core/view_models/create_exam_screen_view_model.dart';
 import 'package:examyy/meta/widgets/question.dart';
@@ -15,9 +16,10 @@ class CreateExamScreen extends StatefulWidget {
 }
 
 class _CreateExamScreenState extends State<CreateExamScreen> {
-  Object selectedValue = 'Item 1';
+  String selectedValue = 'Item 1';
   final TextEditingController _questionNumberController =
       TextEditingController();
+  final TextEditingController _examNameController = TextEditingController();
   var items = [
     'Item 1',
     'Item 2',
@@ -39,7 +41,11 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
           //   print(question.toJson());
           // });
           await Provider.of<CreateExamScreenViewModel>(context, listen: false)
-              .addExam(context);
+              .addExam(
+                  context,
+                  ExamModel(
+                      category: selectedValue,
+                      name: _examNameController.value.text));
         },
         child: const Icon(Icons.upload),
       ),
@@ -56,6 +62,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
               'select the category of your exam',
               style: TextStyle(fontSize: 16),
             ),
+            const SizedBox(height: 10),
             DropdownButton(
               value: selectedValue,
               items: items.map((String items) {
@@ -66,7 +73,7 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
               }).toList(),
               onChanged: (value) {
                 setState(() {
-                  selectedValue = value!;
+                  selectedValue = value!.toString();
                 });
               },
             ),
@@ -84,6 +91,12 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
                 });
               },
             ),
+            const SizedBox(height: 15),
+            const Text(
+              'give a name to this exam',
+              style: TextStyle(fontSize: 16),
+            ),
+            TextFormField(controller: _examNameController),
             for (int i = 0;
                 i <
                     (_questionNumberController.text.isNotEmpty

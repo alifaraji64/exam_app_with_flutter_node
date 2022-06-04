@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:examyy/core/models/exam.dart';
 import 'package:examyy/core/models/question.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
@@ -40,16 +41,34 @@ class Exam {
     }
   }
 
-  Future postExam(List<QuestionModel> _questions) async {
+  Future postExam(
+      List<QuestionModel> _questions, ExamModel _examInstance) async {
+    _questions.map((q) => q.toJson());
     final client = http.Client();
     Uri uri = Uri.parse(baseUrl + '/add-exam');
     http.Response response = await client.post(uri,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'questions': _questions}));
+        body: jsonEncode(
+            {'questions': _questions, 'exam': _examInstance.toJson()}));
     if (response.statusCode != 200) {
       return throw CustomException(msg: jsonDecode(response.body)['error']);
     }
     client.close();
+  }
+
+  Future<List<ExamModel>> fetchExams() async {
+    final client = http.Client();
+    Uri uri = Uri.parse(baseUrl + '/fetch-exams');
+    http.Response response = await client.get(uri);
+
+    if (response.statusCode != 200) {
+      return throw CustomException(msg: jsonDecode(response.body)['error']);
+    }
+    client.close();
+    List exams = jsonDecode(response.body)['exams'];
+    List<ExamModel> convertedExams =
+        exams.map((e) => ExamModel.fromJson(e)).toList();
+    return convertedExams;
   }
 }
 
