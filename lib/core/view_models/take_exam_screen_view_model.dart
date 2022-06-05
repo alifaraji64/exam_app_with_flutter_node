@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class TakeExamScreenViewModel extends ChangeNotifier {
-  Exam _exam = Exam();
+  final Exam _exam = Exam();
   Future fetchExams(BuildContext context) async {
     try {
       List<ExamModel> exams = await _exam.fetchExams();

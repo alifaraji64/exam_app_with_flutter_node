@@ -1,5 +1,6 @@
 import 'package:examyy/core/models/exam.dart';
 import 'package:examyy/core/view_models/take_exam_screen_view_model.dart';
+import 'package:examyy/meta/screens/exam_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,9 +14,14 @@ class TakeExamScreen extends StatefulWidget {
 class _TakeExamScreenState extends State<TakeExamScreen> {
   List<ExamModel>? exams;
   Future fetchExams() async {
-    Provider.of<TakeExamScreenViewModel>(context, listen: false)
+    await Provider.of<TakeExamScreenViewModel>(context, listen: false)
         .fetchExams(context)
-        .then((exams) => this.exams = exams);
+        .then((exams) {
+      setState(() {
+        this.exams = exams;
+        print(exams);
+      });
+    });
   }
 
   @override
@@ -73,7 +79,13 @@ class _TakeExamScreenState extends State<TakeExamScreen> {
                             color: Colors.white,
                             size: 30,
                           ),
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: ((context) => ExamScreen(
+                                      id: exam.id!,
+                                      title: exam.name,
+                                    ))));
+                          },
                         )
                       ],
                     ),

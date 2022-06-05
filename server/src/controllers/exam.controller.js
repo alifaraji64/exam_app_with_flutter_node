@@ -27,7 +27,15 @@ class ExamController {
     console.log('fetch exams');
     Exam.find({})
     .then(exams=>res.status(200).json({exams}))
-    .catch(e=>console.log(e))
+    .catch(e=>res.status(400).json({'error':'error occured while adding exam to database'}))
+  }
+
+  static fetchQuestions(req,res){
+    console.log('fetch questions');
+    const {_id} = req.body;
+    Question.find({examUid:_id})
+    .then(questions => res.status(200).json({questions}))
+    .catch(e => res.status(400).json({'error':'error occured while adding exam to database'}))
   }
 
 }

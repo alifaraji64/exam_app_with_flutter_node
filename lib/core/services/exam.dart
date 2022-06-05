@@ -17,7 +17,6 @@ class Exam {
     if (result == null) {
       throw CustomException(msg: "you didn't select any image");
     }
-    print(result);
     //returning the path of the selected file, so we can wrap it with File in cubit
     return result.files.single.path;
   }
@@ -69,6 +68,24 @@ class Exam {
     List<ExamModel> convertedExams =
         exams.map((e) => ExamModel.fromJson(e)).toList();
     return convertedExams;
+  }
+
+  Future<List<QuestionModel>> fetchQuestions(String id) async {
+    final client = http.Client();
+    Uri uri = Uri.parse(baseUrl + '/fetch-questions');
+    http.Response response = await client.post(uri,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'_id': id}));
+
+    if (response.statusCode != 200) {
+      return throw CustomException(msg: jsonDecode(response.body)['error']);
+    }
+    client.close();
+    List exams = jsonDecode(response.body)['questions'];
+    print(exams);
+    List<QuestionModel> convertedQuestions =
+        exams.map((e) => QuestionModel.fromJson(e)).toList();
+    return convertedQuestions;
   }
 }
 

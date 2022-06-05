@@ -1,4 +1,5 @@
 import 'package:examyy/core/view_models/create_exam_screen_view_model.dart';
+import 'package:examyy/core/view_models/exam_screen_view_model.dart';
 import 'package:examyy/core/view_models/take_exam_screen_view_model.dart';
 import 'package:examyy/meta/screens/home_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
             create: (context) => CreateExamScreenViewModel()),
         ChangeNotifierProvider(create: (context) => TakeExamScreenViewModel()),
+        ChangeNotifierProvider(create: (context) => ExamScreenViewModel()),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

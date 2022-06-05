@@ -4,4 +4,5 @@ const {ExamController} = require('../controllers/exam.controller')
 
 router.post('/add-exam', ExamController.addExam);
 router.get('/fetch-exams', ExamController.fetchExams);
+router.post('/fetch-questions', ExamController.fetchQuestions);
 module.exports={router};
