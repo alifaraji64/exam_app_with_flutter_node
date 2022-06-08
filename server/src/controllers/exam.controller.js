@@ -38,6 +38,27 @@ class ExamController {
     .catch(e => res.status(400).json({'error':'error occured while adding exam to database'}))
   }
 
+  static newExamExists(req,res){
+    let thereIsNewExam = false;
+    Exam.find({})
+    .then(exams=>{
+      exams.forEach(exam=>{
+        const date1 = new Date(exam.date);
+        const date2 = new Date();
+        const diffTime = Math.abs(date2 - date1);
+        const diffDays = Math.floor(diffTime / (1000 * 60));
+        console.log(diffDays);
+        if(diffDays<=45){
+          thereIsNewExam=true;
+        }
+      })
+      res.status(200).json({thereIsNewExam});
+    })
+    .catch(e=>{
+      console.log(e);
+    })
+  }
+
 }
 
 module.exports = { ExamController }

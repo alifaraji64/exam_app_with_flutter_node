@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:examyy/core/models/exam.dart';
 import 'package:examyy/core/models/question.dart';
@@ -86,6 +87,20 @@ class Exam {
     List<QuestionModel> convertedQuestions =
         exams.map((e) => QuestionModel.fromJson(e)).toList();
     return convertedQuestions;
+  }
+
+  Future<bool> newExamExists() async {
+    print('nnn');
+    final client = http.Client();
+    Uri uri = Uri.parse(baseUrl + '/new-exam-exists');
+    http.Response response = await client.get(uri);
+    if (response.statusCode != 200) {
+      return throw CustomException(msg: jsonDecode(response.body)['error']);
+    }
+    client.close();
+    bool newExamExists = jsonDecode(response.body)['thereIsNewExam'];
+    print(newExamExists);
+    return newExamExists;
   }
 }
 

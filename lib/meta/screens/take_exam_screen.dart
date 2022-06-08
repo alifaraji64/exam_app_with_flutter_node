@@ -3,6 +3,7 @@ import 'package:examyy/core/view_models/take_exam_screen_view_model.dart';
 import 'package:examyy/meta/screens/exam_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:workmanager/workmanager.dart';
 
 class TakeExamScreen extends StatefulWidget {
   const TakeExamScreen({Key? key}) : super(key: key);
@@ -33,6 +34,17 @@ class _TakeExamScreenState extends State<TakeExamScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Text('O'),
+        onPressed: () async {
+          try {
+            await Workmanager().cancelAll();
+            print('Cancel all tasks completed');
+          } catch (e) {
+            print(e);
+          }
+        },
+      ),
       appBar: AppBar(
         title: const Text('Take Exam'),
       ),
