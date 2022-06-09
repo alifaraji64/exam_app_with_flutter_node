@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:ffi';
 
 import 'package:examyy/core/models/exam.dart';
 import 'package:examyy/core/models/question.dart';
@@ -8,7 +7,8 @@ import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 
 class Exam {
-  static const baseUrl = 'http://10.0.2.2:8000';
+  static const baseUrl =
+      'https://b9b5-2a01-5ec0-7006-2716-1575-71a0-6377-ee40.ngrok.io';
   static String token = '';
   Future pickImage() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(

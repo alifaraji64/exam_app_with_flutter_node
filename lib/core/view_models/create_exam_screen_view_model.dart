@@ -68,6 +68,7 @@ class CreateExamScreenViewModel extends ChangeNotifier {
 
   uploadImage(BuildContext context, String _image) async {
     try {
+      print(_image);
       String url = await _exam.uploadImage(_image);
       print(url);
       return url;

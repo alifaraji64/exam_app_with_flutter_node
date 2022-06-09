@@ -9,6 +9,10 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/', router);
+app.get('/test',(req,res)=>{
+    res.send('working');
+    console.log('nnn');
+})
 
 const dbURI = "mongodb://localhost:27017/examyy";
 mongoose.connect( dbURI ,{ useNewUrlParser:true, useUnifiedTopology:true })

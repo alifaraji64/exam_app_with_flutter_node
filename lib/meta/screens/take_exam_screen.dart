@@ -35,7 +35,7 @@ class _TakeExamScreenState extends State<TakeExamScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        child: Text('O'),
+        child: const Icon(Icons.cancel),
         onPressed: () async {
           try {
             await Workmanager().cancelAll();

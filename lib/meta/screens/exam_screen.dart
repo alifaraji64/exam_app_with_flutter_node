@@ -65,6 +65,18 @@ class _ExamScreenState extends State<ExamScreen> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            questions[Provider.of<ExamScreenViewModel>(context,
+                                                listen: true)
+                                            .counter]
+                                        .url !=
+                                    null
+                                ? Image.network(questions[
+                                        Provider.of<ExamScreenViewModel>(
+                                                context,
+                                                listen: false)
+                                            .counter]
+                                    .url!)
+                                : Container(),
                             ListView.builder(
                                 shrinkWrap: true,
                                 itemCount: Provider.of<ExamScreenViewModel>(

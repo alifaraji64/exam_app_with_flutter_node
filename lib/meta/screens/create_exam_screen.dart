@@ -16,16 +16,18 @@ class CreateExamScreen extends StatefulWidget {
 }
 
 class _CreateExamScreenState extends State<CreateExamScreen> {
-  String selectedValue = 'Item 1';
+  String selectedValue = 'personality';
   final TextEditingController _questionNumberController =
       TextEditingController();
   final TextEditingController _examNameController = TextEditingController();
   var items = [
-    'Item 1',
-    'Item 2',
-    'Item 3',
-    'Item 4',
-    'Item 5',
+    'personality',
+    'enigineering',
+    'combat sports',
+    'health',
+    'mathematics',
+    'economics',
+    'crypto'
   ];
   @override
   Widget build(BuildContext context) {
@@ -35,11 +37,6 @@ class _CreateExamScreenState extends State<CreateExamScreen> {
           List<QuestionModel> questions =
               Provider.of<CreateExamScreenViewModel>(context, listen: false)
                   .questions;
-          // Provider.of<CreateExamScreenViewModel>(context, listen: false)
-          //     .questions
-          //     .forEach((question) {
-          //   print(question.toJson());
-          // });
           await Provider.of<CreateExamScreenViewModel>(context, listen: false)
               .addExam(
                   context,
